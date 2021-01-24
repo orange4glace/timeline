@@ -89,7 +89,7 @@ export class SelectionController implements IContribution<'TimelineView'> {
     }
   }
 
-  *iterateSelectsOnTrackView(trackView: TrackView): Generator<TrackItemView> {
+  *iterateSelectsOnTrackView(trackView: TrackView<any>): Generator<TrackItemView> {
     for (const select of this.selects_) {
       if (trackView.hasTrackItemView(select)) {
         yield select;

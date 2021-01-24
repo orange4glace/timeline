@@ -4,15 +4,6 @@ import { TimelineView } from 'lib/timelineView';
 import { TrackItemView } from 'lib/trackItemView';
 import { TrackView } from 'lib/trackView';
 
-class BasicTrackView extends TrackView {
-  insertTrackItemView(trackItemView: TrackItemView): void {
-    this.doInsertTrackItemView(trackItemView);
-  }
-  removeTrackItemView(trackItemView: TrackItemView): void {
-    this.doRemoveTrackItemView(trackItemView);
-  }
-}
-
 class BasicTrackItemView extends TrackItemView {
   private startTime_: number;
   private endTime_: number;
@@ -30,6 +21,15 @@ class BasicTrackItemView extends TrackItemView {
   setValue(start: number, end: number): void {
     this.startTime_ = start;
     this.endTime_ = end;
+  }
+}
+
+class BasicTrackView extends TrackView<BasicTrackItemView> {
+  insertTrackItemView(trackItemView: BasicTrackItemView): void {
+    this.doInsertTrackItemView(trackItemView);
+  }
+  removeTrackItemView(trackItemView: BasicTrackItemView): void {
+    this.doRemoveTrackItemView(trackItemView);
   }
 }
 

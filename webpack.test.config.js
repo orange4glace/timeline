@@ -1,4 +1,5 @@
 const path = require('path');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = {
   module: {
@@ -27,6 +28,7 @@ module.exports = {
       root: __dirname,
       lib: path.resolve(__dirname, 'lib'),
     },
+    plugins: [new TsconfigPathsPlugin({/* options: see below */})]
   },
   devtool: 'inline-source-map',
   entry: './test/index.ts',

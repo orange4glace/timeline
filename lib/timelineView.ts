@@ -10,18 +10,18 @@ export interface ITimelineViewEvent<T extends UIEvent> {
   browserEvent: T;
   time: number;
   target: TimelineView;
-  targetTrackView?: TrackView;
+  targetTrackView?: TrackView<any>;
   targetTrackItemView?: TrackItemView;
 }
 
 export class TimelineView implements IContributable<'TimelineView'> {
-  private readonly onDidInsertTrackView_ = new Emitter<[TrackView, number]>();
+  private readonly onDidInsertTrackView_ = new Emitter<[TrackView<any>, number]>();
   readonly onDidInsertTrackView = this.onDidInsertTrackView_.event;
-  private readonly onDidRemoveTrackView_ = new Emitter<[TrackView, number]>();
+  private readonly onDidRemoveTrackView_ = new Emitter<[TrackView<any>, number]>();
   readonly onDidRemoveTrackView = this.onDidRemoveTrackView_.event;
-  private readonly onDidInsertTrackItemView_ = new Emitter<[TrackView, TrackItemView]>();
+  private readonly onDidInsertTrackItemView_ = new Emitter<[TrackView<any>, TrackItemView]>();
   readonly onDidInsertTrackItemView = this.onDidInsertTrackItemView_.event;
-  private readonly onDidRemoveTrackItemView_ = new Emitter<[TrackView, TrackItemView]>();
+  private readonly onDidRemoveTrackItemView_ = new Emitter<[TrackView<any>, TrackItemView]>();
   readonly onDidRemoveTrackItemView = this.onDidRemoveTrackItemView_.event;
   
   private readonly onDbclick_ = new Emitter<ITimelineViewEvent<MouseEvent>>();
@@ -42,16 +42,16 @@ export class TimelineView implements IContributable<'TimelineView'> {
   get domNode() { return this.domNode_; }
   private trackViewsContainer_: HTMLElement;
   get trackViewsContainer() { return this.trackViewsContainer_; }
-  private trackViewContainers_ = new Map<TrackView, HTMLElement>();
+  private trackViewContainers_ = new Map<TrackView<any>, HTMLElement>();
 
   private delegate_: TimelineDelegate;
   private startTime_: number;
   private endTime_: number;
   private width_: number;
 
-  private trackViews_: TrackView[] = [];
-  get trackViews(): readonly TrackView[] { return this.trackViews_; }
-  private trackViewDisposables_ = new Map<TrackView, DisposableStore>();
+  private trackViews_: TrackView<any>[] = [];
+  get trackViews(): readonly TrackView<any>[] { return this.trackViews_; }
+  private trackViewDisposables_ = new Map<TrackView<any>, DisposableStore>();
 
   constructor(
     parent: HTMLElement,
@@ -89,11 +89,11 @@ export class TimelineView implements IContributable<'TimelineView'> {
     this.update();
   }
 
-  indexOf(view: TrackView): number {
+  indexOf(view: TrackView<any>): number {
     return this.trackViews.indexOf(view);
   }
 
-  insertTrackView(trackView: TrackView, index: number) {
+  insertTrackView(trackView: TrackView<any>, index: number) {
     const disposables = new DisposableStore();
     trackView.delegate = this.delegate_;
     this.trackViews_[index] = trackView;
@@ -125,7 +125,7 @@ export class TimelineView implements IContributable<'TimelineView'> {
     disposables.dispose();
   }
 
-  private addTrackViewUIEvent(event: Event<ITrackViewEvent<any>>, emitter: Emitter<ITimelineViewEvent<any>>): IDisposable {
+  private addTrackViewUIEvent(event: Event<ITrackViewEvent<any, any>>, emitter: Emitter<ITimelineViewEvent<any>>): IDisposable {
     return event(e => {
       emitter.fire({
         browserEvent: e.browserEvent,

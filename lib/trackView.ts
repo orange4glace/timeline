@@ -1,30 +1,30 @@
 import { Emitter, Event } from '@orange4glace/vs-lib/base/common/event';
 import { DisposableStore, IDisposable } from '@orange4glace/vs-lib/base/common/lifecycle';
 import { TimelineDelegate } from '@lib/timelineDelegate';
-import { ITrackItemViewEvent, TrackItemView } from '@lib/trackItemView';
+import { ITrackItemViewEvent, TrackItemView as AbstractTrackItemView } from '@lib/trackItemView';
 
-export interface ITrackViewEvent<T extends UIEvent> {
+export interface ITrackViewEvent<TrackItemView extends AbstractTrackItemView, T extends UIEvent> {
   browserEvent: T;
   time: number;
-  target: TrackView;
+  target: TrackView<TrackItemView>;
   targetTrackItemView?: TrackItemView;
 }
 
-export abstract class TrackView {
+export abstract class TrackView<TrackItemView extends AbstractTrackItemView> {
   private readonly onDidInsertTrackItemView_ = new Emitter<TrackItemView>();
   readonly onDidInsertTrackItemView = this.onDidInsertTrackItemView_.event;
   private readonly onDidRemoveTrackItemView_ = new Emitter<TrackItemView>();
   readonly onDidRemoveTrackItemView = this.onDidRemoveTrackItemView_.event;
   
-  private readonly onDbclick_ = new Emitter<ITrackViewEvent<MouseEvent>>();
+  private readonly onDbclick_ = new Emitter<ITrackViewEvent<TrackItemView, MouseEvent>>();
   readonly onDbclick = this.onDbclick_.event;
-  private readonly onDragStart_ = new Emitter<ITrackViewEvent<MouseEvent>>();
+  private readonly onDragStart_ = new Emitter<ITrackViewEvent<TrackItemView, MouseEvent>>();
   readonly onDragStart = this.onDragStart_.event;
-  private readonly onDragOver_ = new Emitter<ITrackViewEvent<MouseEvent>>();
+  private readonly onDragOver_ = new Emitter<ITrackViewEvent<TrackItemView, MouseEvent>>();
   readonly onDragOver = this.onDragOver_.event;
-  private readonly onDragEnd_ = new Emitter<ITrackViewEvent<MouseEvent>>();
+  private readonly onDragEnd_ = new Emitter<ITrackViewEvent<TrackItemView, MouseEvent>>();
   readonly onDragEnd = this.onDragEnd_.event;
-  private readonly onDrop_ = new Emitter<ITrackViewEvent<MouseEvent>>();
+  private readonly onDrop_ = new Emitter<ITrackViewEvent<TrackItemView, MouseEvent>>();
   readonly onDrop = this.onDrop_.event;
 
   private domNode_: HTMLElement;
@@ -81,24 +81,24 @@ export abstract class TrackView {
     this.onDidRemoveTrackItemView_.fire(trackItemView);
   }
 
-  private addTrackItemEventListener<T extends UIEvent>(event: Event<ITrackItemViewEvent<T>>, emitter: Emitter<ITrackViewEvent<T>>): IDisposable {
+  private addTrackItemEventListener<T extends UIEvent>(event: Event<ITrackItemViewEvent<T>>, emitter: Emitter<ITrackViewEvent<TrackItemView, T>>): IDisposable {
     return event(e => {
       emitter.fire({
         browserEvent: e.browserEvent,
         time: e.time,
         target: this,
-        targetTrackItemView: e.target
+        targetTrackItemView: <TrackItemView>e.target
       });
     })
   }
 
-  private addMouseEventListener(type: string, emitter: Emitter<ITrackViewEvent<MouseEvent>>, preventDefualt?: boolean, stopPropagation?: boolean) {
+  private addMouseEventListener(type: string, emitter: Emitter<ITrackViewEvent<TrackItemView, MouseEvent>>, preventDefualt?: boolean, stopPropagation?: boolean) {
     this.domNode_.addEventListener(type, (e: MouseEvent) => {
       const trackMousePosition = e.offsetX;
       const trackTime = this.delegate.positionToTime(trackMousePosition);
       if (preventDefualt) e.preventDefault();
       if (stopPropagation) e.stopPropagation();
-      const tve: ITrackViewEvent<MouseEvent> = {
+      const tve: ITrackViewEvent<TrackItemView, MouseEvent> = {
         browserEvent: e,
         time: trackTime,
         target: this

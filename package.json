@@ -1,13 +1,13 @@
 {
   "name": "@orange4glace/timeline",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "",
   "homepage": "",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
   "scripts": {
     "dev": "webpack serve -c webpack.test.config.js",
-    "build": "rm -rf dist &&rm -rf types && webpack -c webpack.config.js",
+    "build": "rm -rf dist &&rm -rf types && webpack -c webpack.config.js && tsc -p tsconfig.types.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "orange4glace",

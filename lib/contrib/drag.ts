@@ -31,7 +31,7 @@ export class TrackItemViewDragController implements IContribution<'TimelineView'
     this.disposables_.add(timelineView.onDrop(e => this.handleDrop(e)));
   }
 
-  private handleDragStart(e: ITimelineViewEvent<MouseEvent>, trackView: TrackView) {
+  private handleDragStart(e: ITimelineViewEvent<MouseEvent>, trackView: TrackView<any>) {
     this.dragStartTrackIndex_ = this.timelineView.indexOf(trackView);
     this.dragStartTime_ = e.time;
     this.targetTrackItemViews_ = [];
@@ -44,7 +44,7 @@ export class TrackItemViewDragController implements IContribution<'TimelineView'
     }
   }
 
-  private handleDragOver(e: ITimelineViewEvent<MouseEvent>, trackView: TrackView) {
+  private handleDragOver(e: ITimelineViewEvent<MouseEvent>, trackView: TrackView<any>) {
     this.dragOverTrackIndex_ = this.timelineView.indexOf(trackView);
     this.dragOverTime_ = e.time;
     const trackOffset = this.dragOverTrackIndex_ - this.dragStartTrackIndex_;
@@ -102,7 +102,7 @@ export class TrackItemViewDragController implements IContribution<'TimelineView'
     this.ghostDoms_ = doms;
   }
 
-  private createGhost(trackView: TrackView, trackItemView: TrackItemView, timeOffset: number): HTMLElement {
+  private createGhost(trackView: TrackView<any>, trackItemView: TrackItemView, timeOffset: number): HTMLElement {
     const el = document.createElement('div');
     const startTime = trackItemView.startTime + timeOffset;
     const endTime = trackItemView.endTime + timeOffset;

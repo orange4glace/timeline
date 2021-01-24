@@ -70,6 +70,7 @@ export abstract class TrackItemView {
   }
 
   update() {
+    if (!this.delegate_) return;
     const startPos = this.delegate_.timeToPosition(this.startTime);
     const endPos = this.delegate_.timeToPosition(this.endTime);
     this.startPos_ = startPos;
